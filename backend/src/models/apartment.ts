@@ -1,0 +1,16 @@
+import mongoose, { Schema } from 'mongoose';
+import { Apartment } from '../types/apartment';
+
+const apartmentSchema = new Schema<Apartment>({
+  unitName: { type: String, required: true },
+  unitNumber: { type: String, required: true, unique: true },
+  project: { type: String, required: true },
+  price: { type: Number, required: true },
+  bedrooms: { type: Number, required: true },
+  bathrooms: { type: Number, required: true },
+  size: { type: Number, required: true },
+  description: { type: String, required: true },
+  imageUrl: { type: String },
+}, { timestamps: true });
+
+export const ApartmentModel = mongoose.model<Apartment>('Apartment', apartmentSchema);

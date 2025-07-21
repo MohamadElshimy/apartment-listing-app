@@ -1,0 +1,85 @@
+services:
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=apartments
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+    command: mongod --bind_ip_all
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')", "--username", "admin", "--password", "password", "--authenticationDatabase", "admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  seeder:
+    image: mongo:latest
+    volumes:
+      - ./backend/src/data/seed.js:/seed.js
+    networks:
+      - app-network
+    depends_on:
+      mongo:
+        condition: service_healthy
+    command: >
+      bash -c "
+        for i in {1..30}; do
+          mongosh --host mongo --port 27017 --username admin --password password --authenticationDatabase admin apartments /seed.js && break
+          echo 'MongoDB not ready yet, retrying in 2 seconds...'
+          sleep 2
+        done
+      "
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://admin:password@mongo:27017/apartments?authSource=admin
+      - MONGO_USER=admin
+      - MONGO_PASSWORD=password
+    depends_on:
+      mongo:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/apartments"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:5000/api
+    depends_on:
+      backend:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/.next
+    networks:
+      - app-network
+
+volumes:
+  mongo-data:
+
+networks:
+  app-network:
+    driver: bridge

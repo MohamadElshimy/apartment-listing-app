@@ -1,0 +1,16 @@
+# Node.js dependenciesn
+node_modules
+package-lock.json
+
+# Next.js build output
+.next/
+# Node.js build output
+dist/
+
+# Environment variables
+.env
+.env.local
+
+# IDE and editor files
+.vscode/
+
