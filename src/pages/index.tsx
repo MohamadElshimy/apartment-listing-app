@@ -7,13 +7,15 @@ export default function Home() {
   const [apartments, setApartments] = useState<Apartment[]>([]);
   const [search, setSearch] = useState('');
   const [project, setProject] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadApartments = async () => {
       try {
         setLoading(true);
-        const data = await fetchApartments(search, project);
+        const data = await fetchApartments(search, project, minPrice, maxPrice);
         setApartments(data);
       } catch (error) {
         console.error('Error fetching apartments:', error);
@@ -22,7 +24,7 @@ export default function Home() {
       }
     };
     loadApartments();
-  }, [search, project]);
+  }, [search, project, minPrice, maxPrice]);
 
   return (
     <div className="container mx-auto p-4">
@@ -30,20 +32,34 @@ export default function Home() {
         <h1 className="text-3xl font-bold">Apartment Listings</h1>
         <a href="/add-apartment" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-center">Add Apartment</a>
       </div>
-      <div className="mb-6 flex flex-col sm:flex-row gap-4">
+      <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <input
           type="text"
           placeholder="Search by name or unit number"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border p-2 rounded w-full sm:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+          className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
         />
         <input
           type="text"
           placeholder="Filter by project"
           value={project}
           onChange={(e) => setProject(e.target.value)}
-          className="border p-2 rounded w-full sm:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-600"
+          className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
+        />
+        <input
+          type="number"
+          placeholder="Min price"
+          value={minPrice}
+          onChange={(e) => setMinPrice(e.target.value)}
+          className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
+        />
+        <input
+          type="number"
+          placeholder="Max price"
+          value={maxPrice}
+          onChange={(e) => setMaxPrice(e.target.value)}
+          className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
         />
       </div>
       {loading ? (

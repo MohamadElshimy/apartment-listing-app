@@ -42,11 +42,13 @@ A full-stack, containerized apartment listing application with search, filter, a
 
 ### List Apartments
 ```
-GET /api/apartments?search=<query>&project=<project>
+GET /api/apartments?search=<query>&project=<project>&minPrice=<min>&maxPrice=<max>
 ```
 - Query params:
   - `search`: Search by unit name or unit number
   - `project`: Filter by project name
+  - `minPrice`: Filter by minimum price
+  - `maxPrice`: Filter by maximum price
 
 ### Get Apartment Details
 ```

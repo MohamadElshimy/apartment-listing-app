@@ -17,7 +17,7 @@ const apartmentSchema = Joi.object({
 
 export const getApartments = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { search, project } = req.query;
+    const { search, project, minPrice, maxPrice } = req.query;
     let query: any = {};
 
     if (search) {
@@ -29,6 +29,17 @@ export const getApartments = async (req: Request, res: Response, next: NextFunct
 
     if (project) {
       query.project = { $regex: project, $options: 'i' };
+    }
+
+    // Add price range filtering
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) {
+        query.price.$gte = Number(minPrice);
+      }
+      if (maxPrice) {
+        query.price.$lte = Number(maxPrice);
+      }
     }
 
     const apartments = await ApartmentModel.find(query).sort({ createdAt: -1 });

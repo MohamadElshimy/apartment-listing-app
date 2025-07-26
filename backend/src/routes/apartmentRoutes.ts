@@ -8,6 +8,8 @@ const router = express.Router();
  * @desc Get all apartments with optional search and filter
  * @query search - Search by unitName or unitNumber
  * @query project - Filter by project name
+ * @query minPrice - Filter by minimum price
+ * @query maxPrice - Filter by maximum price
  */
 router.get('/', getApartments);
 
