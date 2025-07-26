@@ -53,37 +53,202 @@ export default function AddApartment() {
         size: Number(form.size),
       };
       await addApartment(payload as Omit<Apartment, '_id'>);
-      setSuccess('Apartment added successfully! Redirecting...');
+      setSuccess('Property listed successfully! Redirecting...');
       setTimeout(() => router.push('/'), 1200);
     } catch (err: any) {
-      setError(err?.response?.data?.error || 'Failed to add apartment.');
+      setError(err?.response?.data?.error || 'Failed to list property.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-xl">
-      <h1 className="text-2xl font-bold mb-6">Add New Apartment</h1>
-      <div className="mb-4">
-        <a href="/" className="text-blue-700 hover:underline">&larr; Back to Home</a>
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="container mx-auto px-4 max-w-4xl">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">List Your Property</h1>
+          <p className="text-xl text-gray-600">Reach thousands of potential buyers with our premium listing service</p>
+        </div>
+
+        {/* Breadcrumb */}
+        <div className="mb-8">
+          <a href="/" className="flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+            <span className="mr-2">←</span>
+            Back to Properties
+          </a>
+        </div>
+
+        {/* Form */}
+        <div className="bg-white rounded-2xl shadow-xl p-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Basic Information */}
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Basic Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Property Name *
+                  </label>
+                  <input
+                    name="unitName"
+                    value={form.unitName}
+                    onChange={handleChange}
+                    placeholder="e.g., Luxury Penthouse Suite"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Unit Number *
+                  </label>
+                  <input
+                    name="unitNumber"
+                    value={form.unitNumber}
+                    onChange={handleChange}
+                    placeholder="e.g., A101"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Project/Building *
+                  </label>
+                  <input
+                    name="project"
+                    value={form.project}
+                    onChange={handleChange}
+                    placeholder="e.g., Sky Towers"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Price (USD) *
+                  </label>
+                  <input
+                    name="price"
+                    value={form.price}
+                    onChange={handleChange}
+                    placeholder="e.g., 250000"
+                    type="number"
+                    min="0"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Property Details */}
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Property Details</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Bedrooms *
+                  </label>
+                  <input
+                    name="bedrooms"
+                    value={form.bedrooms}
+                    onChange={handleChange}
+                    placeholder="e.g., 2"
+                    type="number"
+                    min="0"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Bathrooms *
+                  </label>
+                  <input
+                    name="bathrooms"
+                    value={form.bathrooms}
+                    onChange={handleChange}
+                    placeholder="e.g., 2"
+                    type="number"
+                    min="0"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Size (sq ft) *
+                  </label>
+                  <input
+                    name="size"
+                    value={form.size}
+                    onChange={handleChange}
+                    placeholder="e.g., 1200"
+                    type="number"
+                    min="0"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Description */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Description *
+              </label>
+              <textarea
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                placeholder="Describe your property's features, amenities, and unique selling points..."
+                rows={4}
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+              />
+            </div>
+
+            {/* Image URL */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Image URL (Optional)
+              </label>
+              <input
+                name="imageUrl"
+                value={form.imageUrl}
+                onChange={handleChange}
+                placeholder="https://example.com/property-image.jpg"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+              />
+            </div>
+
+            {/* Error/Success Messages */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                {error}
+              </div>
+            )}
+            {success && (
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+                {success}
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <div className="flex justify-end space-x-4">
+              <button
+                type="button"
+                onClick={() => router.push('/')}
+                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 font-medium disabled:opacity-50"
+              >
+                {loading ? 'Listing Property...' : 'List Property'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-      <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded shadow">
-        <input name="unitName" value={form.unitName} onChange={handleChange} placeholder="Unit Name*" className="w-full border p-2 rounded" />
-        <input name="unitNumber" value={form.unitNumber} onChange={handleChange} placeholder="Unit Number*" className="w-full border p-2 rounded" />
-        <input name="project" value={form.project} onChange={handleChange} placeholder="Project*" className="w-full border p-2 rounded" />
-        <input name="price" value={form.price} onChange={handleChange} placeholder="Price*" className="w-full border p-2 rounded" type="number" min="0" />
-        <input name="bedrooms" value={form.bedrooms} onChange={handleChange} placeholder="Bedrooms*" className="w-full border p-2 rounded" type="number" min="0" />
-        <input name="bathrooms" value={form.bathrooms} onChange={handleChange} placeholder="Bathrooms*" className="w-full border p-2 rounded" type="number" min="0" />
-        <input name="size" value={form.size} onChange={handleChange} placeholder="Size (sq ft)*" className="w-full border p-2 rounded" type="number" min="0" />
-        <textarea name="description" value={form.description} onChange={handleChange} placeholder="Description*" className="w-full border p-2 rounded" rows={3} />
-        <input name="imageUrl" value={form.imageUrl} onChange={handleChange} placeholder="Image URL (optional)" className="w-full border p-2 rounded" />
-        {error && <div className="text-red-600 text-sm">{error}</div>}
-        {success && <div className="text-green-600 text-sm">{success}</div>}
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition" disabled={loading}>
-          {loading ? 'Adding...' : 'Add Apartment'}
-        </button>
-      </form>
     </div>
   );
 } 
