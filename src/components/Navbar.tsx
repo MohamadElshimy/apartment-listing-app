@@ -2,27 +2,44 @@ import Link from 'next/link';
 
 export default function Navbar() {
   return (
-    <nav className="bg-gradient-to-r from-blue-900 to-blue-800 text-white shadow-lg border-b-4 border-blue-600">
-      <div className="container mx-auto px-4 py-4">
+    <nav className="bg-white shadow-lg border-b border-gray-100 sticky top-0 z-50">
+      <div className="container mx-auto px-6 py-4">
         <div className="flex justify-between items-center">
           <Link href="/">
-            <div className="flex items-center space-x-2 cursor-pointer group">
-              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                <span className="text-blue-900 font-bold text-lg">🏠</span>
+            <div className="flex items-center space-x-3 cursor-pointer group">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-xl">🏠</span>
               </div>
-              <span className="font-bold text-xl group-hover:text-blue-200 transition-colors">
-                Nawy
-              </span>
+              <div>
+                <span className="font-bold text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">
+                  Nawy
+                </span>
+                <div className="text-xs text-gray-500 -mt-1">Real Estate</div>
+              </div>
             </div>
           </Link>
-          <div className="flex items-center space-x-6">
+          
+          <div className="hidden md:flex items-center space-x-8">
             <Link href="/">
-              <span className="hover:text-blue-200 transition-colors font-medium cursor-pointer">
+              <span className="text-gray-700 hover:text-blue-600 transition-colors font-medium cursor-pointer">
                 Browse Properties
               </span>
             </Link>
+            <Link href="/">
+              <span className="text-gray-700 hover:text-blue-600 transition-colors font-medium cursor-pointer">
+                About Us
+              </span>
+            </Link>
+            <Link href="/">
+              <span className="text-gray-700 hover:text-blue-600 transition-colors font-medium cursor-pointer">
+                Contact
+              </span>
+            </Link>
+          </div>
+
+          <div className="flex items-center space-x-4">
             <Link href="/add-apartment">
-              <span className="bg-white text-blue-900 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium cursor-pointer">
+              <span className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 font-medium shadow-lg hover:shadow-xl">
                 List Property
               </span>
             </Link>
