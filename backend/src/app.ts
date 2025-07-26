@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './config/db';
 import apartmentRoutes from './routes/apartmentRoutes';
+import { errorHandler } from './middleware/errorHandler';
 
 dotenv.config();
 
@@ -18,6 +19,9 @@ app.use(express.json());
 connectDB();
 
 app.use('/api/apartments', apartmentRoutes);
+
+// Centralized error handler
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
