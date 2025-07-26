@@ -13,4 +13,8 @@ const apartmentSchema = new Schema<Apartment>({
   imageUrl: { type: String },
 }, { timestamps: true });
 
+apartmentSchema.index({ unitName: 1 });
+apartmentSchema.index({ unitNumber: 1 });
+apartmentSchema.index({ project: 1 });
+
 export const ApartmentModel = mongoose.model<Apartment>('Apartment', apartmentSchema);
