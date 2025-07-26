@@ -1,8 +1,21 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { ApartmentModel } from '../models/apartment';
 import { Apartment } from '../types/apartment';
+import Joi from 'joi';
 
-export const getApartments = async (req: Request, res: Response) => {
+const apartmentSchema = Joi.object({
+  unitName: Joi.string().required(),
+  unitNumber: Joi.string().required(),
+  project: Joi.string().required(),
+  price: Joi.number().required(),
+  bedrooms: Joi.number().required(),
+  bathrooms: Joi.number().required(),
+  size: Joi.number().required(),
+  description: Joi.string().required(),
+  imageUrl: Joi.string().uri().optional(),
+});
+
+export const getApartments = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { search, project } = req.query;
     let query: any = {};
@@ -21,12 +34,11 @@ export const getApartments = async (req: Request, res: Response) => {
     const apartments = await ApartmentModel.find(query).sort({ createdAt: -1 });
     res.json(apartments);
   } catch (error) {
-    console.error('Error fetching apartments:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 };
 
-export const getApartmentById = async (req: Request, res: Response) => {
+export const getApartmentById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const apartment = await ApartmentModel.findById(req.params.id);
     if (!apartment) {
@@ -34,18 +46,20 @@ export const getApartmentById = async (req: Request, res: Response) => {
     }
     res.json(apartment);
   } catch (error) {
-    console.error('Error fetching apartment:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    next(error);
   }
 };
 
-export const addApartment = async (req: Request, res: Response) => {
+export const addApartment = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { error } = apartmentSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
     const apartment = new ApartmentModel(req.body);
     await apartment.save();
     res.status(201).json(apartment);
   } catch (error) {
-    console.error('Error adding apartment:', error);
-    res.status(400).json({ error: 'Invalid apartment data' });
+    next(error);
   }
 };
