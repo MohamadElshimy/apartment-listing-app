@@ -12,7 +12,7 @@ const apartmentSchema = Joi.object({
   bathrooms: Joi.number().required(),
   size: Joi.number().required(),
   description: Joi.string().required(),
-  imageUrl: Joi.string().uri().optional(),
+  imageUrl: Joi.string().allow('', null).optional(),
 });
 
 export const getApartments = async (req: Request, res: Response, next: NextFunction) => {
@@ -67,7 +67,23 @@ export const addApartment = async (req: Request, res: Response, next: NextFuncti
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
-    const apartment = new ApartmentModel(req.body);
+    
+    const apartmentData = { ...req.body };
+    
+    // If imageUrl is provided, validate it's a proper URL
+    if (apartmentData.imageUrl && apartmentData.imageUrl.trim() !== '') {
+      try {
+        new URL(apartmentData.imageUrl);
+      } catch {
+        return res.status(400).json({ 
+          error: 'Image URL must be a valid URL (e.g., https://example.com/image.jpg)' 
+        });
+      }
+    } else {
+      apartmentData.imageUrl = '';
+    }
+    
+    const apartment = new ApartmentModel(apartmentData);
     await apartment.save();
     res.status(201).json(apartment);
   } catch (error) {

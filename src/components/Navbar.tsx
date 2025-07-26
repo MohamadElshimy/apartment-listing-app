@@ -18,24 +18,6 @@ export default function Navbar() {
               </div>
             </div>
           </Link>
-          
-          {/* <div className="hidden md:flex items-center space-x-8">
-            <Link href="/">
-              <span className="text-gray-700 hover:text-blue-600 transition-colors font-medium cursor-pointer">
-                Browse Properties
-              </span>
-            </Link>
-            <Link href="/">
-              <span className="text-gray-700 hover:text-blue-600 transition-colors font-medium cursor-pointer">
-                About Us
-              </span>
-            </Link>
-            <Link href="/">
-              <span className="text-gray-700 hover:text-blue-600 transition-colors font-medium cursor-pointer">
-                Contact
-              </span>
-            </Link>
-          </div> */}
 
           <div className="flex items-center space-x-4">
             <Link href="/add-apartment">
