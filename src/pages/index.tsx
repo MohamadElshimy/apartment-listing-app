@@ -26,7 +26,10 @@ export default function Home() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Apartment Listings</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+        <h1 className="text-3xl font-bold">Apartment Listings</h1>
+        <a href="/add-apartment" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-center">Add Apartment</a>
+      </div>
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
         <input
           type="text"
