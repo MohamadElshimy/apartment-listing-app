@@ -1,14 +1,15 @@
 # Apartment Listing App
 
-A full-stack, containerized apartment listing application with search, filter, and CRUD functionality.
+A simple, full-stack apartment listing application built with Next.js, Node.js, and MongoDB. Features search, filtering, and responsive design.
 
 ## Features
-- List, search, and filter apartments
-- View apartment details
-- Add new apartments
-- Responsive UI (Next.js + Tailwind)
-- RESTful backend (Node.js + Express + MongoDB)
-- Fully containerized with Docker Compose
+- **Browse apartments** with search and filtering
+- **View detailed information** for each apartment
+- **Add new listings** with validation
+- **Search by** unit name, unit number, or project
+- **Filter by** price range
+- **Responsive design** for all devices
+- **Containerized** with Docker for easy deployment
 
 ## Getting Started
 
@@ -23,20 +24,24 @@ A full-stack, containerized apartment listing application with search, filter, a
    git clone https://github.com/MohamadElshimy/apartment-listing-app.git
    cd apartment-listing-app
    ```
+   
 2. **Start all services:**
    ```bash
    docker-compose up --build
    ```
-   - Frontend: [http://localhost:3000](http://localhost:3000)
-   - Backend API: [http://localhost:5000/api/apartments](http://localhost:5000/api/apartments)
-   - MongoDB: [localhost:27017](mongodb://admin:password@localhost:27017/apartments?authSource=admin)
 
-3. **Seed the database:**
-   - The database is automatically seeded on first run.
+3. **Access the application:**
+   - **Frontend**: [http://localhost:3000](http://localhost:3000)
+   - **Backend API**: [http://localhost:5000](http://localhost:5000)
+   - **Health Check**: [http://localhost:5000/health](http://localhost:5000/health)
+
+4. **Database:**
+   - Automatically seeded with sample data on first run
 
 ### Environment Variables
-- Backend: see `backend/.env` (or set via `docker-compose.yml`)
-- Frontend: `NEXT_PUBLIC_API_URL` (set in `docker-compose.yml`)
+All environment variables are configured in `docker-compose.yml`:
+- **Backend**: MongoDB connection, port configuration
+- **Frontend**: API URL configuration
 
 ## API Endpoints
 
@@ -73,10 +78,31 @@ Content-Type: application/json
 ```
 
 ## Project Structure
-- `backend/` - Node.js/Express API
-- `src/` - Next.js frontend
-- `docker-compose.yml` - Multi-service orchestration
+```
+apartment-listing-app/
+├── backend/                 # Node.js + Express API
+│   ├── src/
+│   │   ├── controllers/     # API controllers
+│   │   ├── models/          # MongoDB schemas
+│   │   ├── routes/          # API routes
+│   │   └── app.ts           # Express app setup
+├── src/                     # Next.js frontend
+│   ├── components/          # React components
+│   ├── pages/               # Next.js pages
+│   └── lib/                 # API client
+└── docker-compose.yml       # Docker services
+```
+
+## Technologies Used
+
+- **Frontend**: Next.js, React, TypeScript, Tailwind CSS
+- **Backend**: Node.js, Express, TypeScript, MongoDB, Mongoose
+- **Database**: MongoDB
+- **Containerization**: Docker, Docker Compose
 
 ## Development
-- To run backend or frontend locally, use `npm install && npm run dev` in the respective folder.
-- For seeding: `npm run seed` in `backend/`.
+
+For local development without Docker:
+- **Backend**: `cd backend && npm install && npm run dev`
+- **Frontend**: `npm install && npm run dev`
+- **Database**: Use local MongoDB instance
