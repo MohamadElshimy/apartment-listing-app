@@ -106,4 +106,4 @@ For local development without Docker:
 - **Backend**: `cd backend && npm install && npm run dev`
 - **Frontend**: `npm install && npm run dev`
 - **Database**: Use local MongoDB instance
-- **DB seeding**: `npm run seed` in `backend/`.
+- **DB seeding**: `cd backend && npm run seed`.
