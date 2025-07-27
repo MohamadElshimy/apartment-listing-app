@@ -16,6 +16,7 @@ A simple, full-stack apartment listing application built with Next.js, Node.js, 
 ### Prerequisites
 - [Docker](https://www.docker.com/get-started)
 - [Docker Compose](https://docs.docker.com/compose/)
+- **Node.js 20+** (for local development without Docker)
 
 ### Quick Start
 
@@ -106,4 +107,6 @@ For local development without Docker:
 - **Backend**: `cd backend && npm install && npm run dev`
 - **Frontend**: `npm install && npm run dev`
 - **Database**: Use local MongoDB instance
-- **DB seeding**: `cd backend && npm run seed`.
+- **DB seeding**: `cd backend && npm run seed`
+
+**Note**: The application requires Node.js 20+ for local development. Docker containers automatically use the correct Node.js version.
