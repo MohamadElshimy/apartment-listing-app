@@ -1,49 +1,50 @@
 import { Request, Response, NextFunction } from 'express';
 import { ApartmentModel } from '../models/apartment';
-import { Apartment } from '../types/apartment';
+import { Apartment, ApartmentQueryParams } from '../types/apartment';
 import Joi from 'joi';
 
 const apartmentSchema = Joi.object({
-  unitName: Joi.string().required(),
-  unitNumber: Joi.string().required(),
-  project: Joi.string().required(),
-  price: Joi.number().required(),
-  bedrooms: Joi.number().required(),
-  bathrooms: Joi.number().required(),
-  size: Joi.number().required(),
-  description: Joi.string().required(),
-  imageUrl: Joi.string().allow('', null).optional(),
+  unitName: Joi.string().required().trim().max(100),
+  unitNumber: Joi.string().required().trim().max(20),
+  project: Joi.string().required().trim().max(100),
+  price: Joi.number().required().min(0),
+  bedrooms: Joi.number().required().min(0).max(20),
+  bathrooms: Joi.number().required().min(0).max(20),
+  size: Joi.number().required().min(0),
+  description: Joi.string().required().trim().max(2000),
+  imageUrl: Joi.string().allow('', null).optional().trim().max(500)
 });
 
 export const getApartments = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { search, project, minPrice, maxPrice } = req.query;
-    let query: any = {};
-
+    const { search, project, minPrice, maxPrice } = req.query as ApartmentQueryParams;
+    
+    const query: any = {};
+    
     if (search) {
       query.$or = [
         { unitName: { $regex: search, $options: 'i' } },
-        { unitNumber: { $regex: search, $options: 'i' } },
+        { unitNumber: { $regex: search, $options: 'i' } }
       ];
     }
-
+    
     if (project) {
       query.project = { $regex: project, $options: 'i' };
     }
-
-    // Add price range filtering
+    
     if (minPrice || maxPrice) {
       query.price = {};
-      if (minPrice) {
-        query.price.$gte = Number(minPrice);
-      }
-      if (maxPrice) {
-        query.price.$lte = Number(maxPrice);
-      }
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
     }
-
+    
     const apartments = await ApartmentModel.find(query).sort({ createdAt: -1 });
-    res.json(apartments);
+    
+    res.json({
+      success: true,
+      data: apartments,
+      count: apartments.length
+    });
   } catch (error) {
     next(error);
   }
@@ -51,11 +52,21 @@ export const getApartments = async (req: Request, res: Response, next: NextFunct
 
 export const getApartmentById = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const apartment = await ApartmentModel.findById(req.params.id);
+    const { id } = req.params;
+    
+    const apartment = await ApartmentModel.findById(id);
+    
     if (!apartment) {
-      return res.status(404).json({ error: 'Apartment not found' });
+      return res.status(404).json({
+        success: false,
+        error: 'Apartment not found'
+      });
     }
-    res.json(apartment);
+    
+    res.json({
+      success: true,
+      data: apartment
+    });
   } catch (error) {
     next(error);
   }
@@ -63,30 +74,37 @@ export const getApartmentById = async (req: Request, res: Response, next: NextFu
 
 export const addApartment = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { error } = apartmentSchema.validate(req.body);
+    const { error, value } = apartmentSchema.validate(req.body);
+    
     if (error) {
-      return res.status(400).json({ error: error.details[0].message });
+      return res.status(400).json({
+        success: false,
+        error: error.details[0].message
+      });
     }
     
-    const apartmentData = { ...req.body };
-    
-    // If imageUrl is provided, validate it's a proper URL
-    if (apartmentData.imageUrl && apartmentData.imageUrl.trim() !== '') {
+    if (value.imageUrl && value.imageUrl.trim() !== '') {
       try {
-        new URL(apartmentData.imageUrl);
+        new URL(value.imageUrl);
       } catch {
-        return res.status(400).json({ 
-          error: 'Image URL must be a valid URL (e.g., https://example.com/image.jpg)' 
+        return res.status(400).json({
+          success: false,
+          error: 'Invalid image URL'
         });
       }
     } else {
-      apartmentData.imageUrl = '';
+      value.imageUrl = '';
     }
     
-    const apartment = new ApartmentModel(apartmentData);
+    const apartment = new ApartmentModel(value);
     await apartment.save();
-    res.status(201).json(apartment);
+    
+    res.status(201).json({
+      success: true,
+      data: apartment
+    });
   } catch (error) {
     next(error);
   }
 };
+

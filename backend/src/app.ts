@@ -3,8 +3,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './config/db';
 import apartmentRoutes from './routes/apartmentRoutes';
-import { errorHandler } from './middleware/errorHandler';
+import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 
+// Load environment variables
 dotenv.config();
 
 const app = express();
@@ -16,13 +17,26 @@ app.use(cors({
 }));
 app.use(express.json());
 
-connectDB();
+app.get('/health', (req, res) => {
+  res.json({ success: true, message: 'API is running' });
+});
 
 app.use('/api/apartments', apartmentRoutes);
-
-// Centralized error handler
+app.use(notFoundHandler);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+async function startServer() {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+startServer();
+
+export default app;
